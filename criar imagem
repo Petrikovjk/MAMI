@@ -1,0 +1,25 @@
+
+PImage img, img2;
+
+void setup() {
+  size(640, 360);  
+  img = createImage(500, 200, ARGB);
+  img2 = createImage(600, 300, ARGB);
+  
+  for (int i = 0; i < img.pixels.length; i+=5) {
+    float a = map(i, 0, img.pixels.length, 255, 0);
+    img.pixels[i] = color(153, 13, 20, a);
+  }
+  for (int j = 0; j < img2.pixels.length; j+=5) {
+    float a = map(j, 0, img2.pixels.length, 255, 0);
+    img2.pixels[j] = color(13, 13, 200, a); 
+     }
+}
+
+void draw() {
+  background(0);
+  image(img2, 3, 4);
+   image(img, mouseX-img.width/2, mouseY-img.height/2);
+    image(img2, 5, 224);
+    image(img2, 336, 94);
+}
