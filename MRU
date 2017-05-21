@@ -1,0 +1,30 @@
+float tB;
+float vB=1;
+float dB;
+float t;
+
+void setup() {
+  size(600, 600);
+  smooth();
+ //frameRate(60);
+}
+void grid() {//criar um grid na tela
+  for (int i=0; i<12; i++) {
+    line(i*50, 0, i*50, 600);
+    line(0, i*50, 600, i*50);
+  }
+}
+float MRU(float v, float t) { 
+  float d;
+  d= v * t;
+  return(d);
+}
+void draw () {
+  background (255);
+  grid();
+   dB= MRU(vB, tB);  
+  ellipse(dB, 200, 20, 20);
+  fill(0);
+  t = 1;
+  tB += t;
+}
