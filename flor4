@@ -1,0 +1,63 @@
+import controlP5.*;
+ControlP5 gui;
+void setup() {
+  gui = new ControlP5 (this);
+  background(0);
+  size(600, 600);
+  smooth();
+  noStroke(); 
+  text("Quantas flores deseja ? ", 240, 210); 
+  text("Qual raio máximo para flores?", 240, 280);
+  text("obs: tente numeros maiores que 10.", 240, 295);
+
+  //criação da GUI
+  gui.addTextfield("valor").setPosition(240, 220).setSize(120, 20);
+  gui.addTextfield("raio ").setPosition(240, 300).setSize(120, 20);
+  gui.addBang("enter") 
+    .setPosition(240, 340)
+    .setSize(30, 20)
+    .getCaptionLabel()
+    .align(ControlP5.CENTER, ControlP5.CENTER);
+}
+//ação do botao
+void enter() {
+  background(0);
+  int qtd = parseInt(gui.get(Textfield.class, "valor").getText()); 
+  //recebe a quantidade
+  for (int i= 0; i<qtd; i++) {  
+    float h =int(random(0, 500));// Posição x do centro do circulo.
+    float v = int(random(0, 500));// Posição y do centro do circulo.
+
+    //recebe o raio
+    float r = int(parseInt(gui.get(Textfield.class, "raio ").getText()));
+    flor4(h, v, r);
+  }
+}
+
+void flor4(float x, float y, float r ) {
+  float cat =sqrt(r*r*2) ;
+
+  //1# set de petalas
+  ellipse(x, y-2*r, 2*r, 2*r);
+  ellipse(x+2*r, y, 2*r, 2*r);
+  ellipse(x-2*r, y, 2*r, 2*r);
+  ellipse(x, y+2*r, 2*r, 2*r);
+  fill(int(random(255)), int(random(255)), int(random(255)));
+  //2# set de petalas 
+  ellipse(x+r, y-r, 2*r, 2*r);
+  ellipse(x-r, y-r, 2*r, 2*r);
+  ellipse(x-r, y+r, 2*r, 2*r);
+  ellipse(x+r, y+r, 2*r, 2*r);
+  ellipse(x+cat, y-cat, 2*r, 2*r);
+  ellipse(x-cat, y+cat, 2*r, 2*r);
+  ellipse(x+cat, y+cat, 2*r, 2*r);
+  ellipse(x-cat, y-cat, 2*r, 2*r);
+  fill(int(random(255)), int(random(255)), int(random(255)));
+  //centro
+  ellipse(x, y, 2*r, 2*r);
+  fill(int(random(255)), int(random(255)), int(random(255)));
+}
+
+void draw() {
+  println(mouseX, mouseY);
+}
