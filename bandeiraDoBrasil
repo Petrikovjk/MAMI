@@ -1,0 +1,46 @@
+void setup () {
+  size(600, 600);
+  smooth();
+  
+}
+void mostraBandeiraBrasil(float x, float y, float l) {
+  float m = l/20;
+  float a = 14*m;
+  float espaco = m*1.7;
+  float altLosango = ((a/2)-espaco);//altura losando
+  float larLosango = ((l/2)-espaco);//largura losango
+
+  //retangulo
+  rectMode(CENTER);
+  fill(#16B83E);
+  noStroke();
+  rect(x, y, l, a);
+
+  //losango
+  fill(#FFE11F);
+  quad(
+    x, y-altLosango, 
+    x+larLosango, y, 
+    x, y+altLosango, 
+    x-larLosango, y
+    );
+
+  //bola
+  ellipseMode(CENTER);
+  fill(#1651B8);
+  ellipse(width/2, height/2, m*7, m*7);
+
+  
+}
+void draw(){
+ // background(0);
+ 
+mostraBandeiraBrasil(300, 300, 600);
+ noFill();
+  strokeWeight(22);
+  stroke(255, 253, 252);
+  curve(121, 185, 389, 324, 208, 269, -187, 488);
+  stroke(0); 
+   noStroke();
+   
+}
