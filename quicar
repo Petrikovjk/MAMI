@@ -1,0 +1,44 @@
+float t = 0;     
+float tx = 0;     
+float a = -2;    
+float vx = 150;    
+float vy = 250;   
+float dv;   
+float dh; 
+void setup() {
+  size(1400,600);
+  background(0);
+}
+
+float MRUV(float v, float t, float a) {
+  float d;
+  d = (v * t) + (a * t * t/2);
+  return(d);
+}
+float MRU(float v, float t) {
+  float d;
+  d= (v * t);
+  return(d);
+}
+
+
+void draw() {
+  dv= MRUV(vy, t, a)/60;
+  dh= MRU(vx, tx)/60;
+
+  if (dv <= 0) {
+    dv = 0;
+    t = 0;
+  }
+  t++;
+  tx++;
+  
+  //background(0);
+  if (dv <= 0) {
+    ellipse(dh, height - dv, 35, 15);
+    
+    a--;
+  } else ellipse(dh, height - dv, 25, 25);
+   
+    println(dv);
+  }
