@@ -1,0 +1,114 @@
+//----------variaveis globais. utilizadas para a randomização das posiçoes de cada modulo.--------------------
+int esp = 60;                //esp == espaço
+int esp2 = 60;
+int esp3 = 60;
+int esp4 = 60;
+int total = 120;
+
+int vet[] = {-1, 1};               //o vetor que multiplica o espaço alterando assim sua orientação 
+int rand = round(random(0, 1));    
+int rand2 = round(random(0, 1));//  variavel em random que decide quando a figura esta na vertical ou horizontal
+
+void setup() { 
+  size(720, 720);
+  esp = esp*vet[rand];              
+  rand = round(random(0, 1));
+  esp2 = esp2*vet[rand];
+  esp3 = esp3*vet[rand];
+  esp4 = esp4*vet[rand];
+}
+
+void draw() {
+
+  background(255);
+
+  if (rand2==0) {                   //estrutura que caso TRUE rotaciona a figura inteira. 
+    translate(width, 0);             //a figura e movida para fora da janela, e entao rotate() a traz de volta.
+    rotate(PI/2);
+  } else {
+  }
+
+  fig4(8);
+  fig1(8);
+  fig2(8);
+  fig3(8);
+}
+
+
+//**-----------------------funções criadas para a chamada de cada conjunto de modulos na pintura--------------------------------------------------**
+
+void fig1(int quantidade )
+{
+
+  for (int i = 0; i<quantidade; i++)
+  {
+    float x1 = esp+total*i;
+    float x2 = x1+esp;
+    float x3 = x1;
+    float x4 = x1-esp;
+    float yTopo = 0;
+    float yBase = yTopo + 240;
+    noStroke();
+    quad(x1, yTopo, x2, yTopo, x3, yBase, x4, yBase);
+  }
+}
+
+void fig2(int quantidade)
+{
+  for (int i = 0; i<quantidade; i++)
+  {
+    float x1 = esp2+120*i;
+    float x2 = x1+esp2;
+    float x3 = x1;
+    float x4 = x1-esp2;
+    float yTopo = height/2 - 120;
+    float yBase = yTopo + 240;
+    fill(0);
+    quad(x1, yTopo, x2, yTopo, x3, yBase, x4, yBase);
+  }
+}
+
+void fig3(int quantidade)
+{
+  for (int i = 0; i<quantidade; i++)
+  {
+    float x1 = esp3+120*i;
+    float x2 = x1+esp3;
+    float x3 = x1;
+    float x4 = x1-esp3;
+    float yTopo = height/2 + 120;
+    float yBase = yTopo + 240;
+    noStroke();
+    fill(200);
+    quad(x1, yTopo, x2, yTopo, x3, yBase, x4, yBase);
+  }
+}
+
+
+
+void fig4(int quantidade)
+{
+  for (int i = 0; i<quantidade; i++)
+  {
+    float x1 = esp4+120*i;
+    float x2 = x1+esp4;
+    float x3 = x1;
+    float x4 = x1-esp4;
+    float yTopo = height/2 - 120;
+    float yBase = yTopo + 240;
+    fill(200);
+    quad(x1, yTopo, x2, yTopo, x3, yBase, x4, yBase);
+  }
+}
+
+
+//---------------------**função para mudar a posição de cada modulo com o clique do mouse--------------------------------
+
+void mouseReleased() {
+  esp = esp*vet[rand];
+  rand = round(random(0, 1));
+  esp2 = esp2*vet[rand];
+  rand = round(random(0, 1));
+  esp3 = esp3*vet[rand];
+  esp4 = esp4*vet[rand];
+}
