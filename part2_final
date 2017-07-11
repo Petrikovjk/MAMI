@@ -1,0 +1,258 @@
+//o quadro e constitudo de 4 modulos, topo, 2 no centro,e base. cada modulos contem o numero de paralelogramos indicados como parametros
+
+
+import controlP5.*;
+ControlP5 gui;
+int col = color(255);
+boolean VERTICAL = false;
+boolean HORIZONTAL = false;
+boolean DIREITA = false;
+boolean ESQUERDA = false;
+boolean on______off = false;
+boolean show = true;
+
+//---------------------------variaveis globais. utilizadas para a randomização das posiçoes de cada modulo.--------------------
+int l = 60;                //l == largura de cada retangulo em seu respectivo modulo
+int l2 = 60;
+int l3 = 60;
+int l4 = 60;
+int h = 120;               // h = altura de cada retangulo em seu respectivo modulo
+int qtd=8;
+int modulo1 = 0;               //os modulos decidem a direção dos componentes de cada modulo
+int modulo2 = 0;
+int modulo3 = 0;
+int modulo4 = 0;
+int vet[] = {-1, 1};               //o vetor que multiplica o laço alterando assim sua orientação 
+int rand = round(random(0, 1));    
+int rand2 = round(random(0, 1));   //  variavel em random que decide quando o quadro inteiro  esta na vertical ou horizontal
+
+
+void setup() { 
+  size(720, 720);
+  background(125);
+  gui = new ControlP5 (this);
+  smooth();
+ 
+  GUI();
+}
+
+//-----------------------------------**DRAW**---------------------------
+
+void draw() {
+}
+
+//**-------------------------**criação da GUi**-------------------------------**
+
+void GUI() {
+
+    text("Qual a orientação do quadro?", 40, 80); 
+    text("Qual a direção do modulo central? ", 40, 180);
+    text("Resultado Aleatorio.", 40, 315);
+    //text("obs: tente .", 240, 295);
+    gui.addToggle("VERTICAL")
+      .setPosition(40, 100)
+      .setValue(VERTICAL)
+      .setSize(50, 20)
+      ;
+    gui.addToggle("HORIZONTAL")
+      .setPosition(100, 100)
+      .setValue(HORIZONTAL)
+      .setSize(50, 20)
+      ;
+    gui.addToggle("DIREITA")
+      .setPosition(40, 200)
+      .setValue(DIREITA)
+      .setSize(50, 20)
+      ;
+    gui.addToggle("ESQUERDA")
+      .setPosition(100, 200)
+      .setValue(ESQUERDA)
+      .setSize(50, 20)
+      ;
+    gui.addToggle("on______off")
+      .setPosition(38, 320)
+      //.setValue("on______off")
+      .setMode(ControlP5.SWITCH)
+      .setSize(50, 20)
+      ;
+    gui.addBang("enter") 
+      .setPosition(240, 380)
+      .setSize(80, 50)
+      .getCaptionLabel()
+      .align(ControlP5.CENTER, ControlP5.CENTER);
+      show =false;
+ 
+}
+
+
+//-----------------------------------**funções de controle da GUI**-------------------------------------------------------
+void enter() {
+
+  if (HORIZONTAL ==true) { 
+    background(255);
+    VERTICAL =false; 
+    rand2 = 1;
+    pushMatrix();
+    if (rand2==0) {                   //estrutura que caso TRUE rotaciona a figura inteira. 
+
+      translate(width, 0);             //a figura e movida para fora da janela, e entao rotate() a traz de volta.
+      rotate(PI/2);
+    } else {
+    }
+    fig4(qtd);
+    fig1(qtd);
+    fig2(qtd);
+    fig3(qtd);
+    popMatrix();
+  }
+
+
+
+
+  if (VERTICAL ==true) {
+    background(255);
+    HORIZONTAL =false; 
+    rand2 = 0;
+    pushMatrix();
+    if (rand2==0) {                  
+
+      translate(width, 0);            
+      rotate(PI/2);
+    } else {
+    }
+    fig4(qtd);
+    fig1(qtd);
+    fig2(qtd);
+    fig3(qtd);
+    popMatrix();
+  }
+
+
+
+
+  if (DIREITA ==true) {
+    ESQUERDA = false;
+    modulo1 = -1;
+    l2 = l2*modulo1;
+  }
+
+
+
+
+  if (ESQUERDA ==true) {
+    ESQUERDA = false;
+    modulo1 = 1;
+    l2 = l2*modulo1;
+  }
+
+
+
+
+  if (on______off ==true) {
+    background(255);
+    l = l*vet[rand];
+    rand = round(random(0, 1));
+    l2 = l2*vet[rand];
+    rand = round(random(0, 1));
+    l3 = l3*vet[rand];
+    l4 = l4*vet[rand];
+    println(l+" "+l2+" "+l3+" "+l4);
+    pushMatrix();
+    if (rand2==0) {                   //estrutura que caso TRUE rotaciona a figura inteira. 
+
+      translate(width, 0);             //a figura e movida para fora da janela, e entao rotate() a traz de volta.
+      rotate(PI/2);
+    } else {
+    }
+    fig4(qtd);
+    fig1(qtd);
+    fig2(qtd);
+    fig3(qtd);
+    popMatrix();
+    on______off =false;
+  }
+ gui.setAutoDraw(false); 
+  
+}
+
+
+//**-----------------------funções criadas para a chamada de cada conjunto de modulos na pintura--------------------------------------------------**
+
+void fig1(int quantidade )
+{
+
+  for (int i = 0; i<quantidade; i++)
+  {
+    float x1 = l+h*i;
+    float x2 = x1+l;
+    float x3 = x1;
+    float x4 = x1-l;
+    float yTopo = 0;
+    float yBase = yTopo + 240;
+    noStroke();
+    quad(x1, yTopo, x2, yTopo, x3, yBase, x4, yBase);
+  }
+}
+
+void fig2(int quantidade)
+{
+  for (int i = 0; i<quantidade; i++)
+  {
+    float x1 = l2+120*i;
+    float x2 = x1+l2;
+    float x3 = x1;
+    float x4 = x1-l2;
+    float yTopo = height/2 - 120;
+    float yBase = yTopo + 240;
+    fill(0);
+    noStroke();
+    quad(x1, yTopo, x2, yTopo, x3, yBase, x4, yBase);
+  }
+}
+
+void fig3(int quantidade)
+{
+  for (int i = 0; i<quantidade; i++)
+  {
+    float x1 = l3+120*i;
+    float x2 = x1+l3;
+    float x3 = x1;
+    float x4 = x1-l3;
+    float yTopo = height/2 + 120;
+    float yBase = yTopo + 240;
+    noStroke();
+    fill(200);
+    quad(x1, yTopo, x2, yTopo, x3, yBase, x4, yBase);
+  }
+}
+
+
+
+void fig4(int quantidade)
+{
+  for (int i = 0; i<quantidade; i++)
+  {
+    float x1 = l4+120*i;
+    float x2 = x1+l4;
+    float x3 = x1;
+    float x4 = x1-l4;
+    float yTopo = height/2 - 120;
+    float yBase = yTopo + 240;
+    fill(200);
+    noStroke();
+    quad(x1, yTopo, x2, yTopo, x3, yBase, x4, yBase);
+  }
+}
+
+
+//---------------------**função para mudar a posição de cada modulo com o clique do mouse**--------------------------------
+
+void mouseReleased() {
+  l = l*vet[rand];
+  rand = round(random(0, 1));
+  l2 = l2*vet[rand];
+  rand = round(random(0, 1));
+  l3 = l3*vet[rand];
+  l4 = l4*vet[rand];
+  println(l+" "+l2+" "+l3+" "+l4);
+}
