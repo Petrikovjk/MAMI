@@ -1,4 +1,4 @@
-import colorblind.ColorBlindness;
+
 import controlP5.*;
 int x;
 int colunas= 1;
@@ -10,8 +10,7 @@ ControlP5 gui;
 void setup() { 
 
   gui = new ControlP5(this);
-  ColorBlindness colorBlindness = new ColorBlindness(this);
-  colorBlindness.simulateProtanopia();
+  
   frameRate(2);
   size(400, 550);
   noStroke();
