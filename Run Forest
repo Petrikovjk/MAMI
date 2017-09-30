@@ -1,0 +1,43 @@
+float[] car= new float[20];  //<>// //<>// //<>// //<>// //<>// //<>//
+float y = 40;
+color c = color (random(0, 255), random(0, 255), random(0, 255));
+float t = 0;
+float d = 0;
+
+void setup() {
+  size(700, 700);
+  //frameRate(60);
+}
+
+
+
+void draw() {
+  background(200);
+  for (int j = 0; j< 19; j++) {
+    car[j] = random(0, 250);
+    fill(c);
+    rect(d, j*y, 30, 15);
+    c = color (random(0, 255), random(0, 255), random(0, 255));
+    d= MRU(car[j], t);
+    if(d > width){
+      noLoop();
+      textSize(40);
+      text (" O carro" + j+ " é o vencedor",150,350);
+    }
+     
+  }
+
+  
+  t+= 1./60;
+ randomSeed(0);
+}
+
+
+
+
+
+float MRU(float v, float t) {
+  float d;
+  d = v*t;
+  return(d);
+}
