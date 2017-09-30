@@ -1,0 +1,51 @@
+import colorblind.ColorBlindness;
+import controlP5.*;
+int x;
+int colunas= 1;
+int linhas= 1;
+int i, j;
+ControlP5 gui;
+
+
+void setup() { 
+
+  gui = new ControlP5(this);
+  ColorBlindness colorBlindness = new ColorBlindness(this);
+  colorBlindness.simulateProtanopia();
+  frameRate(2);
+  size(400, 550);
+  noStroke();
+  smooth();
+  gui.addSlider("colunas").setRange(0, 4).setValue(colunas).setPosition(20, 400).setSize(20, 130);
+  gui.addSlider("linhas").setRange(0, 4).setValue(linhas).setPosition(70, 400).setSize(130, 20);
+}
+
+
+
+void draw() {
+  randomSeed(0);
+  background(100);
+  println(linhas);
+
+  for (i = 0; i < colunas; i++) {
+    for (j = 0; j < linhas; j++) {
+      bloco (i*100, j*100, 100);
+    }
+  }
+}
+
+
+
+
+void circulo(int x, int y, int r) { //criando a funcao de criar circulos
+  fill(random(20, 200), random(20, 200), random(20, 200));  
+  ellipse(x, y, 2*r, 2*r); //2*r, na funcao ellipse as ultimas duas variaveis significam altura e largura
+}
+
+void bloco(int x, int y, int t) {//criando a funcao de blocos
+  fill(random(50, 200));  
+  rect(x, y, t, t);
+  circulo(x+t/2, y+t/2, t/2); //o centro da elipse é a metade da altura e largura do bloco
+  circulo(x+t/2, y+t/2, t/int(random(3, 5)));
+  circulo(x+t/2, y+t/2, t/int(random(6, 10)));
+}
