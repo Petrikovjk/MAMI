@@ -1,0 +1,82 @@
+int bastaoX=300, bolaX=300, bolaY=10, dX=5, dY=5, cor=255;
+
+void setup () {
+  size (600, 600);
+  noStroke();
+}
+
+void draw() {
+  fill(200);
+  background(10);
+  ellipse(bolaX, bolaY, 20, 20);
+
+  bolaX= bolaX+dX;
+  bolaY= bolaY+dY;
+
+  rect(bastaoX, 580, 100, 20);
+  if ((keyPressed ==true) &&(keyCode==RIGHT))
+    bastaoX+=7;
+  if ((keyPressed ==true) &&(keyCode==LEFT))
+    bastaoX-=7 ;
+  if (bastaoX>=500)
+    bastaoX=500;
+  if (bastaoX<=0)
+    bastaoX=0;
+
+  objeto(60+(100), 250);
+  objeto(60+(200), 350);
+  objeto(60+(400), 200);
+
+
+  if (bolaX>=590 || bolaX<15)
+    dX=-dX; 
+  if (bolaY<=0)
+    dY=-dY;
+  if (bolaY>=600) {
+    textSize(50);
+    text("GAME OVER", 180, 300); 
+    fill(200, 102, 50);
+  }
+
+  if (bolaX>bastaoX && bolaX<bastaoX+100 && bolaY>height-30 ) {
+    dY=-dY;
+  }
+}
+
+
+
+//colisão c objetos
+void objeto (int x, int y ) {
+  int l =60, a =25;
+
+
+
+  rect(x, y, l, a);
+
+  if (bolaX>=x && bolaX<x+1 && bolaY>=y && bolaY <= y+a) {
+    dX = -dX;
+    l =0;
+    a=0;
+  }
+
+  if (bolaX<=x+l && bolaX>x+l-1 && bolaY>=y && bolaY <= y+a) {
+    dX = -dX;
+    l =0;
+    a=0;
+  }
+
+
+
+  if (bolaY<=y+a && bolaY>y+a-1 && bolaX>x && bolaX<x+l) {
+    dY = -dY;
+    l =0;
+    a=0;
+  }
+
+
+  if (bolaY>=y && bolaY<y+1 && bolaX>x && bolaX<x+l) {
+    dY = -dY;
+    l =0;
+    a=0;
+  }
+}
