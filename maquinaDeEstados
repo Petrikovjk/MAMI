@@ -1,0 +1,56 @@
+int tempo = 0;
+final int PARADO = 0;
+final int ESQUERDA = 1;
+final int  MARTELADA = 2;
+final int  DIREITA = 3;
+PImage[] sprite = new PImage[4];
+int x = 250;
+int estadoMario = PARADO;
+
+void setup(){
+  sprite[0] = loadImage("parado.png");
+  sprite[1] = loadImage("andando.png");
+  sprite[2] = loadImage("martelando.png");
+  sprite[3] = loadImage("direita.png");
+  size(800, 600);
+}
+
+
+void draw(){
+  background(255);
+  states();
+  println(estadoMario, tempo);
+}
+
+void states() {
+  if (estadoMario == MARTELADA || estadoMario == DIREITA || estadoMario == ESQUERDA){
+    tempo++;
+    if (estadoMario == ESQUERDA)
+      x--; 
+    else if (estadoMario == DIREITA)
+      x++;
+  }
+  if (tempo>=30){
+    tempo = 0; 
+    estadoMario = PARADO;
+  } 
+  mostraMario(estadoMario);
+}
+
+void keyPressed(){
+  switch(keyCode){
+    case 37:
+      estadoMario = ESQUERDA;
+    break;
+    case 39:
+      estadoMario = DIREITA;
+    break;
+    case 32:
+      estadoMario = MARTELADA;
+    break;
+  }
+}
+
+void mostraMario(int estado){
+  image(sprite[estado ], x, 150); 
+}
