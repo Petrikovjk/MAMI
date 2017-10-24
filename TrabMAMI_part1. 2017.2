@@ -1,0 +1,219 @@
+import colorblind.ColorBlindness; 
+import controlP5.*;
+ControlP5 gui;
+ColorBlindness colorAlter = new ColorBlindness(this);
+
+final int BARROCA = 1;
+final int SINISTRA = -1;
+final int SOLIDA_FRENTE = 2;
+final int SOLIDA_TRAS = -2;
+final int COLUNA = 5; // Nunca maior que 5
+final int LINHA = 4; // Nunca maior que 4
+final int SIZE = 100; 
+
+int altera =5;
+int value =7 ;
+int sat = 10;
+int dir = 0;
+int [][] orientacao  = new int[COLUNA][LINHA];
+float [] HUE1 = new float [5];
+float [] HUE2 = new float [5];
+int rand1;
+int rand2;
+int cont =0;
+
+
+//<>// //<>// //<>////<>// //<>//<>// //<>// //<>//<>// //<>// //<>////<>// //<>//<>// //<>// //<>//<>// //<>// 
+void setup() {
+
+  gui = new ControlP5 (this);
+  colorMode (HSB, 360, 10, 10);  //HSV 
+  size(900, 400);
+  noStroke();
+  smooth();
+
+
+  gui.addTextfield("numero").setPosition(500, 220).setSize(120, 20);
+  gui.addBang("Enter1") 
+    .setPosition(500, 240)
+    .setSize(30, 20)
+    .getCaptionLabel();
+
+
+  gui.addBang("Enter2") 
+    .setPosition(500, 360)
+    .setSize(30, 20)
+    .getCaptionLabel();
+
+  HUE1[0] = 144;
+  HUE1[1] = 208;
+  HUE1[2] = 22;
+  HUE1[3] = 171;
+  HUE1[4] = 90;
+
+  HUE2[0] = 18;
+  HUE2[1] = 353;
+  HUE2[2] = 290;
+  HUE2[3] = 90;
+  HUE2[4] = 30;
+}
+
+void draw() {
+  background(100);
+  drawCanvas();
+  callMethod(rand1);
+  text("pressione  'DIREITA'  para randomizar", 500, 50);
+  text("correção de cores 0= tritanopia  1=deuteranopia  2= coneAzul ", 500, 200); 
+  text("Simulaçao de daltonia", 500, 350); 
+
+
+  switch(altera) {   // permite mudar entre as opçoes de correção
+  case 0:
+    colorAlter.daltonizeTritanopia();
+    break;
+  case 1:
+    colorAlter.daltonizeDeuteranopia();
+  case 2:
+    colorAlter.daltonizeAchromatopsia();
+    break;
+  case 3:
+    colorAlter.daltonizeBlueConeMonochromacy();
+    break;
+  case 4:
+    colorAlter.simulateProtanopia();
+    break;
+  }
+}
+
+//<>// //<>// //<>////<>// //<>//<>// //<>// //<>// inicio das funçoes //<>// //<>//<>// //<>// //<>// 
+
+
+void callMethod(int n) {   // randomiza  a escolha entre os tipos de obra
+
+  switch(n) {
+  case 0:
+    genMatrizQuad();
+    break;
+  case 1:
+    genMatrizQuad();
+  case 2:
+    genMatrizTri();
+    break;
+  case 3:
+    genMatrizTri();
+    break;
+  }
+}
+
+//<>////<>// //<>//<>// //<>// //<>// tipos de obra //<>// //<>//<>// //<>// //<>// //<>// //<>//<>// //<>//
+
+void genMatrizQuad() {
+  for (int i = 0; i< COLUNA; i ++) {
+    for (int j = 0; j <LINHA; j++) {
+
+      if (i==1) {
+        orientacao[i][j] = SINISTRA;
+      } else if (i==3) {
+
+        orientacao[i][j] = BARROCA;
+      } else if (i==2) {
+        orientacao[i][j] = SOLIDA_FRENTE;
+      } else {
+        orientacao[i][j] = SOLIDA_TRAS;
+      }
+    }
+  }
+}
+void genMatrizTri() {
+  for (int i = 0; i< COLUNA; i ++) {
+    for (int j = 0; j <LINHA; j++) {
+
+      if (i%2 == 0) {
+        orientacao[i][j] = SINISTRA;
+      } else {
+        orientacao[i][j] = BARROCA;
+      }
+    }
+  }
+}
+
+
+
+//<>// //<>// //<>////<>// //<>//<>// //<>// //<>//funçao de  modulos //<>// //<>//<>// //<>// //<>// //<>//
+void drawCanvas() {
+  for (int i = 0; i< COLUNA; i ++) {
+    for (int j = 0; j <LINHA; j++) {
+      if (i==0) { 
+        value=7;
+      } else if (i==1) { 
+        value = 4;
+      } else if (i == 3) {
+        value = 10;
+        sat = 5;
+      } else {
+        value = 7;
+      }
+
+      if (j%2 == 0) {
+        module(i*SIZE, j*SIZE, HUE1[rand1], HUE2[rand2], sat, value, orientacao[i][j]);
+      } else {
+        module(i*SIZE, j*SIZE, HUE2[rand2], HUE1[rand1], sat, value, orientacao[i][j]);
+      }
+    }
+  }
+}
+
+void module(float x, float y, float H1, float H2, int S, int V, int side ) {
+
+  if (side == SINISTRA) {
+    fill(H1, S, V );
+    triangle(x, y, x+SIZE, y, x+SIZE, y+SIZE);
+    fill(H2, S, V);
+    triangle(x, y, x, y+SIZE, x+SIZE, y+SIZE);
+  } else if (side == BARROCA) {
+    fill(H1, S, V );
+    triangle(x, y, x+SIZE, y, x, y+SIZE);
+    fill(H2, S, V);
+    triangle(x+SIZE, y, x+SIZE, y+SIZE, x, y+SIZE);
+  } else if (side == SOLIDA_FRENTE) {
+    fill(H1, S, V );
+    rect(x, y, SIZE, SIZE);
+  } else { // if SOLIDA_TRAS
+    fill(H2, S, V );
+    rect(x, y, SIZE, SIZE);
+  }
+}
+
+//<>// //<>// //<>////<>// //<>//<>// //<>// //<>// funçoes auxiliares //<>// //<>//<>// //<>// //<>// //<>//
+void mouseClicked() {
+  cont = 1;
+  if (cont >0) {  
+    text("carregando...", 500, 150);  
+    cont =0;
+  }
+}
+
+void keyPressed() {
+  if (keyCode == 39) {
+    rand1 = round(random(0, 4));
+    rand2 = round(random(0, 4));
+  }
+  cont = 1;
+  if (cont >0) {  
+    text("carregando...", 500, 150);  
+    cont =0;}
+}
+
+void Enter1() {    // funçao dos botoes enter
+
+  altera =parseInt(gui.get(Textfield.class, "numero").getText());
+}
+void Enter2() {
+
+  altera =4 ;
+}
+
+float rad(float graus) {
+  graus =graus *(3.14/180);
+  return graus;
+} 
