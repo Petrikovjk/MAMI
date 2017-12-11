@@ -1,0 +1,422 @@
+//import colorblind.ColorBlindness; 
+import controlP5.*;
+ControlP5 gui;
+
+//ColorBlindness colorAlter = new ColorBlindness(this);
+
+HScrollbar hs1, hs2;  // Two scrollbars
+
+final int BARROCA = 1;
+final int SINISTRA = -1;
+
+final int SOLIDA_FRENTE = 2;
+final int SOLIDA_TRAS = -2;
+
+final int COLUNA = 5; // Nunca maior que 5
+final int LINHA = 4; // Nunca maior que 4
+
+final int SIZE = 100; 
+
+int altera =5;
+int value =7 ;
+int sat = 10;
+int dir = 0;
+int [][] orientacao  = new int[COLUNA][LINHA];
+float [] HUE1 = new float [10];  //agora é 10 para caber os numeros que o slider passa
+float [] HUE2 = new float [10];
+int rand1;
+int rand2;
+int cont =0;
+int cor1, cor2;
+int forma = 1 ;
+boolean flagClick = false;
+int orienta =0;
+
+
+//<>// //<>// //<>////<>// //<>//<>// //<>// //<>//<>// //<>// //<>////<>// //<>//<>// //<>// //<>//<>// //<>// 
+void setup() {
+
+  gui = new ControlP5 (this);
+  colorMode (HSB, 360, 10, 10);  //HSV 
+  size(1050, 400);
+  noStroke();
+  smooth();
+
+  //****************bptoes, corlorblindness
+  gui.addTextfield("numero").setPosition(505, 280).setSize(120, 20);
+  gui.addBang("Enter1") 
+    .setPosition(505, 300)
+    .setSize(30, 20)
+    .getCaptionLabel();
+
+
+  gui.addBang("Enter2") 
+    .setPosition(505, 360)
+    .setSize(30, 20)
+    .getCaptionLabel();
+
+  //****************botoes forma
+
+  gui.addBang("Quadrado") 
+    .setPosition(505, 132)
+    .setSize(30, 20)
+    .getCaptionLabel();
+
+
+  gui.addBang("Triangulo") 
+    .setPosition(580, 132)
+    .setSize(30, 20)
+    .getCaptionLabel();
+
+  //******************************botoes da orientação
+  gui.addBang("Vertical") 
+    .setPosition(725, 132)
+    .setSize(30, 20)
+    .getCaptionLabel();
+
+
+  gui.addBang("Horizontal") 
+    .setPosition(790, 132)
+    .setSize(30, 20)
+    .getCaptionLabel();
+
+
+
+  hs1 = new HScrollbar(505, 60, 360, 16, 10);
+  hs2 = new HScrollbar(505, 80, 360, 16, 10);
+
+  //paleta de cores predefinida
+  HUE1[5] = 144;
+  HUE1[6] = 208;
+  HUE1[7] = 28;
+  HUE1[8] = 171;
+  HUE1[9] = 100;
+
+  HUE2[5] = 18;
+  HUE2[6] = 353;
+  HUE2[7] = 290;
+  HUE2[8] = 90;
+  HUE2[9] = 35;
+}
+
+void draw() {
+  background(100);
+ 
+
+  // barras coloridas para indicaçao
+  for (int i = 5; i<=9; i++) {
+    fill(HUE1[i], 10, 10);
+    rect(145+72*i, 40, 72, 10);
+  }
+
+  for (int i = 5; i<=9; i++) {
+    fill(HUE2[i], 10, 10);
+    rect(145+72*i, 90, 72, 10);
+  }
+
+  println (mouseX+" "+ mouseY);
+  println(cor1);
+
+  if (flagClick == false ) {
+    cor1 = round(hs1.getPos()/100);
+    cor2 = round(hs2.getPos()/100);
+  }
+
+
+  hs1.update();
+  hs2.update();
+  hs1.display();
+  hs2.display();
+
+  switch(orienta) {   // permite mudar a orientação
+  case 0:
+    drawCanvas();
+  callMethod(forma);  
+    break;
+  case 1:
+     pushMatrix();
+  translate(width-650, 0);             //a figura e movida para fora da janela, e entao rotate() a traz de volta.
+  rotate(PI/2);
+  drawCanvas();
+  callMethod(forma);  
+  popMatrix();
+    break;
+  }
+
+  //switch(altera) {   // permite mudar entre as opçoes de correção
+  //case 0:
+  //  colorAlter.daltonizeTritanopia();
+  //  break;
+  //case 1:
+  //  colorAlter.daltonizeDeuteranopia();
+  //  break;
+  //case 2:
+  //  colorAlter.daltonizeAchromatopsia();
+  //  break;
+  //case 3:
+  //  colorAlter.daltonizeBlueConeMonochromacy();
+  //  break;
+  //case 4:
+  //  colorAlter.simulateProtanopia();
+  //  break;
+  //}
+
+  fill(0, 0, 10);
+  text("Pressione  'DIREITA'  para randomizar.", 505, 15);
+  text ("Cor de fundo. ", 868, 60);
+  text ("Cor da forma.", 868, 88);
+  text ("Escolha a forma desejada.", 505, 130);
+  text ("Escolha a orientação desejada.", 725, 130);
+  text("Correção de cores para Daltônicos. (opções abaixo podem interferir na escolha livre de cores.) ", 505, 250);
+  text("0= tritanopia  1=deuteranopia  2= coneAzul ", 505, 270); 
+  text("Simulaçao de daltonia para Não-Daltônicos.", 505, 350);
+}
+
+//<>// //<>// //<>////<>// //<>//<>// //<>// //<>// inicio das funçoes //<>// //<>//<>// //<>// //<>// 
+
+
+void callMethod(int n) {   // randomiza  a escolha entre os tipos de obra
+
+  switch(n) {
+  case 0:
+    genMatrizQuad();
+    break;
+  case 1:
+    genMatrizQuad();
+  case 2:
+    genMatrizTri();
+    break;
+  case 3:
+    genMatrizTri();
+    break;
+  }
+}
+
+//<>////<>// //<>//<>// //<>// //<>// tipos de obra //<>// //<>//<>// //<>// //<>// //<>// //<>//<>//
+
+void genMatrizQuad() {
+  for (int i = 0; i< COLUNA; i ++) {
+    for (int j = 0; j <LINHA; j++) {
+
+      if (i==1) {
+        orientacao[i][j] = SINISTRA;
+      } else if (i==3) {
+
+        orientacao[i][j] = BARROCA;
+      } else if (i==2) {
+        orientacao[i][j] = SOLIDA_FRENTE;
+      } else {
+        orientacao[i][j] = SOLIDA_TRAS;
+      }
+    }
+  }
+}
+void genMatrizTri() {
+  for (int i = 0; i< COLUNA; i ++) {
+    for (int j = 0; j <LINHA; j++) {
+
+      if (i%2 == 0) {
+        orientacao[i][j] = SINISTRA;
+      } else {
+        orientacao[i][j] = BARROCA;
+      }
+    }
+  }
+}
+
+
+
+//<>// //<>// //<>////<>// //<>//<>// //<>// //<>//funçao de  modulos //<>// //<>//<>// //<>//
+void drawCanvas() {
+  for (int i = 0; i< COLUNA; i ++) {
+    for (int j = 0; j <LINHA; j++) {
+      if (i==0) { 
+        value=7;
+      } else if (i==1) { 
+        value = 4;
+      } else if (i == 3) {
+        value = 10;
+        sat = 5;
+      } else {
+        value = 7;
+      }
+
+      if (j%2 == 0) {
+        module(i*SIZE, j*SIZE, HUE1[cor1], HUE2[cor2], sat, value, orientacao[i][j]);
+      } else {
+        module(i*SIZE, j*SIZE, HUE2[cor2], HUE1[cor1], sat, value, orientacao[i][j]);
+      }
+    }
+  }
+}
+
+void module(float x, float y, float H1, float H2, int S, int V, int side ) {  // funçao que produz apenas UM modulo, apenas um quadradinho.
+
+  if (side == SINISTRA) {
+    fill(H1, S, V );
+    triangle(x, y, x+SIZE, y, x+SIZE, y+SIZE);
+    fill(H2, S, V);
+    triangle(x, y, x, y+SIZE, x+SIZE, y+SIZE);
+  } else if (side == BARROCA) {
+    fill(H1, S, V );
+    triangle(x, y, x+SIZE, y, x, y+SIZE);
+    fill(H2, S, V);
+    triangle(x+SIZE, y, x+SIZE, y+SIZE, x, y+SIZE);
+  } else if (side == SOLIDA_FRENTE) {
+    fill(H1, S, V );
+    rect(x, y, SIZE, SIZE);
+  } else { // if SOLIDA_TRAS
+    fill(H2, S, V );
+    rect(x, y, SIZE, SIZE);
+  }
+}
+
+//<>// //<>// //<>////<>// //<>//<>// //<>// //<>// funçoes auxiliares //<>// //<>//<>// //<>//
+void mouseClicked() {
+  flagClick =false;
+  cont = 1;
+  if (cont >0) {  
+    text("CARREGANDO...", 950, 380);  
+    cont =0;
+  }
+}
+
+void keyPressed() {
+
+  flagClick =true;
+  if (keyCode == 39) {
+    cor1 = round(random(5, 9));
+    cor2 = round(random(5, 9));
+    forma = round(random(0, 4));
+    orienta = round(random(0,1));
+  }
+  cont = 1;
+  if (cont >0) {  
+    text("CARREGANDO...", 950, 380);  
+    cont =0;
+  }
+}
+
+void Enter1() {    // funçao dos botoes enter
+
+  altera =parseInt(gui.get(Textfield.class, "numero").getText());
+}
+void Enter2() {
+
+  altera =4 ;
+}
+
+
+void Quadrado() {
+
+  forma = 0;
+}
+void Triangulo() {
+
+  forma = 1;
+}
+
+void Vertical() {
+
+  orienta = 1;
+}
+void Horizontal() {
+
+  orienta = 0;
+}
+
+
+
+//**********************************************************************
+
+float distancia2D(int x1, int y1, int x2, int y2) {
+  float distancia = sqrt(pow(distancia1D(x2, x1), 2)+pow(distancia1D(y2, y1), 2));
+  return distancia;
+}
+
+float distancia1D(int n1, int n2) {
+  float distancia = abs(n2 - n1);
+  return distancia;
+}
+
+
+
+
+
+
+//////////*****************CLASSE DOS SLIDERS***********************////////////
+class HScrollbar {
+  int swidth, sheight;    // width and height of bar
+  float xpos, ypos;       // x and y position of bar
+  float spos, newspos;    // x position of slider
+  float sposMin, sposMax; // max and min values of slider
+  int loose;              // how loose/heavy
+  boolean over;           // is the mouse over the slider?
+  boolean locked;
+  float ratio;
+
+  HScrollbar (float xp, float yp, int sw, int sh, int l) {
+    swidth = sw;
+    sheight = sh;
+    int widthtoheight = sw - sh;
+    ratio = (float)sw / (float)widthtoheight;
+    xpos = xp;
+    ypos = yp-sheight/2;
+    spos = xpos + swidth/2 - sheight/2;
+    newspos = spos;
+    sposMin = xpos;
+    sposMax = xpos + swidth - sheight;
+    loose = l;
+  }
+
+  void update() {
+    if (overEvent()) {
+      over = true;
+    } else {
+      over = false;
+    }
+    if (mousePressed && over) {
+      locked = true;
+    }
+    if (!mousePressed) {
+      locked = false;
+    }
+    if (locked) {
+      newspos = constrain(mouseX-sheight/2, sposMin, sposMax);
+    }
+    if (abs(newspos - spos) > 1) {
+      spos = spos + (newspos-spos)/loose;
+    }
+  }
+
+  float constrain(float val, float minv, float maxv) {
+    return min(max(val, minv), maxv);
+  }
+
+  boolean overEvent() {
+    if (mouseX > xpos && mouseX < xpos+swidth &&
+      mouseY > ypos && mouseY < ypos+sheight) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  void display() {
+    noStroke();
+    fill(204);
+    rect(xpos, ypos, swidth, sheight);
+    if (over || locked) {
+      fill(0, 0, 0);
+    } else {
+      fill(102, 102, 102);
+    }
+    rect(spos, ypos, sheight, sheight);
+  }
+
+  float getPos() {
+    // Convert spos to be values between
+    // 0 and the total width of the scrollbar
+    return spos * ratio;
+  }
+}
