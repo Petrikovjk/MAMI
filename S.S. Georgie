@@ -1,0 +1,46 @@
+mar m;
+
+
+void setup() {
+  size(800, 600);
+  m = new mar(5);
+}
+
+void draw() {
+  background(#63B3B3);
+  m.desenha();
+  m.mover();
+}
+
+class mar {
+  float x, r;
+  color cor;
+  Olhaonda[] on;
+  PImage barco, mar;  
+  
+  
+  mar(float r1) {
+    on = new Olhaonda[100];
+    r = r1;
+    x = 0;
+    barco = loadImage("barco.png");    
+    mar = loadImage("mar.PNG");
+  }
+
+  void desenha() {    
+    float y = sin(x); 
+    x+=0.1;
+    noStroke();
+    //ellipse(x*20, 20*y+height/2, r*2, r*2);
+    imageMode(CENTER);    
+    image(mar, width/2,height/2);
+    image(barco, x*20, 20*y+height/2);
+  }
+
+  void mover() {
+  }
+}
+
+class Olhaonda {
+  float x, y;
+}
