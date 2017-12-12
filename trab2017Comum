@@ -38,7 +38,7 @@ void setup() {
 
   gui = new ControlP5 (this);
   colorMode (HSB, 360, 10, 10);  //HSV 
-  size(1050, 400);
+  size(1050, 500);
   noStroke();
   smooth();
 
